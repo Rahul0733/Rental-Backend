@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.cts.property.DTO.LandlordDto;
+import com.cts.property.DTO.LandlordResponse;
 import com.cts.property.DTO.PropertyDto;
-import com.cts.property.feign.LandlordFeignClient;
+import com.cts.property.feign.UserServiceClient;
 import com.cts.property.model.Property;
 import com.cts.property.repository.PropertyRepository;
 
@@ -17,13 +17,13 @@ import lombok.AllArgsConstructor;
 public class PropertyService {
 
     private final PropertyRepository propRepo;
-    private final LandlordFeignClient landlordFeignClient;
+    private final UserServiceClient userServiceClient;
 
     public Property addPropertyByUserId(int userId, PropertyDto dto) {
-        LandlordDto landlord = landlordFeignClient.getLandlordByUserId(userId);
-
+        LandlordResponse landlord = userServiceClient.getLandlordByUserId(userId);
+        
         Property prop = new Property();
-        prop.setOwnerId(landlord.getOwnerId());
+        prop.setLandlordId(landlord.getLandlordId());
         prop.setName(dto.getName());
         prop.setAddress(dto.getAddress());
         prop.setRentAmount(dto.getRentAmount());
@@ -40,10 +40,10 @@ public class PropertyService {
     }
 
     public List<Property> getOwnerPropertiesByUserId(int userId) {
-        LandlordDto landlord = landlordFeignClient.getLandlordByUserId(userId);
-        System.out.println("ownerID: "+landlord.getOwnerId());
-        System.out.println(propRepo.findPropertiesByOwnerId(landlord.getOwnerId()));
-        return propRepo.findPropertiesByOwnerId(landlord.getOwnerId());
+        LandlordResponse landlord = userServiceClient.getLandlordByUserId(userId);
+        System.out.println("ownerID: "+landlord.getLandlordId());
+        System.out.println(propRepo.findPropertiesByLandlordId(landlord.getLandlordId()));
+        return propRepo.findPropertiesByLandlordId(landlord.getLandlordId());
     }
 
     public Property updateProperty(int propertyId, PropertyDto dto) {

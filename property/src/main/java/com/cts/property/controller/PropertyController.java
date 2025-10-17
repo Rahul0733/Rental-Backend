@@ -11,20 +11,22 @@ import com.cts.property.model.Property;
 import com.cts.property.service.PropertyService;
 
 @RestController
-@RequestMapping("/property")
+@RequestMapping("auth/users/property")
 @CrossOrigin(origins = "http://localhost:4200")
 public class PropertyController {
 
     @Autowired
     private PropertyService service;
    
+    
     @PostMapping("/add/by-user/{userId}")
     public ResponseEntity<Property> addProperty(@PathVariable int userId, @RequestBody PropertyDto dto) {
         return ResponseEntity.ok(service.addPropertyByUserId(userId, dto));
     }
 
-    @GetMapping("/owner/by-user/{userId}")
+    @GetMapping("/landlord/by-user/{userId}")
     public ResponseEntity<List<Property>> getOwnerProperties(@PathVariable int userId) {
+    	System.out.println("Reached");
         return ResponseEntity.ok(service.getOwnerPropertiesByUserId(userId));
     }
 

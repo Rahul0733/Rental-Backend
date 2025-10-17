@@ -22,9 +22,7 @@ public class Property {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int propId;
 	
-//	@ManyToOne
-//	@JoinColumn(name="owner_id", nullable = false)
-	private int ownerId;
+	private int landlordId;
 	
 	private String name;
 	
