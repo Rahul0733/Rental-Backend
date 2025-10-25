@@ -4,7 +4,11 @@ import com.cts.user_service.dto.LandlordRequest;
 import com.cts.user_service.dto.LandlordResponse;
 import com.cts.user_service.dto.TenantRequest;
 import com.cts.user_service.dto.TenantResponse;
+import com.cts.user_service.model.Tenant;
 import com.cts.user_service.service.UserService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +21,15 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/tenant/{userId}")
-    public ResponseEntity<TenantResponse> getTenantDetail(@PathVariable Long userId) {
+    public ResponseEntity<TenantResponse> getTenantDetail(@PathVariable long userId) {
+    	System.out.println("-----------------------r"+userId);
         TenantResponse response = userService.getTenantProfile(userId);
+        System.out.println(response+"-------------------res");
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/landlord/{userId}")
-    public ResponseEntity<LandlordResponse> getLandlordDetail(@PathVariable Long userId) {
+    public ResponseEntity<LandlordResponse> getLandlordDetail(@PathVariable long userId) {
         LandlordResponse response = userService.getLandlordProfile(userId);
         System.out.println("response to property service----------"+response);
         return ResponseEntity.ok(response);
@@ -40,4 +46,5 @@ public class UserController {
         userService.saveLandlordProfile(request);
         return ResponseEntity.ok().build();
     }
+    
 }

@@ -10,5 +10,5 @@ import com.cts.property.DTO.LandlordDto;
 public interface LandlordFeignClient {
 
     @GetMapping("/owner/by-user/{userId}")
-    LandlordDto getLandlordByUserId(@PathVariable("userId") int userId);
+    LandlordDto getLandlordByUserId(@PathVariable("userId") long userId);
 }

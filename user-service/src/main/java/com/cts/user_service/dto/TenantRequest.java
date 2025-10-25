@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class TenantRequest {
-    private Long userId;
+    private long userId;
     private String email;
     private String name;
     private long mobileNo;

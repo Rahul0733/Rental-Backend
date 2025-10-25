@@ -21,7 +21,7 @@ public class AuthService {
     private final UserServiceClient userServiceClient;
 
     public void signup(SignupRequest request) {
-        if (userRepository.findUserByEmail(request.getEmail())!=null) {
+        if (!userRepository.findUserByEmail(request.getEmail()).isEmpty()) {
             throw new UserAlreadyExistsException("Email already registered");
         }
 

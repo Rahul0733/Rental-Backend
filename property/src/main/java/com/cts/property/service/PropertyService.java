@@ -1,6 +1,7 @@
 package com.cts.property.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,11 @@ public class PropertyService {
     private final PropertyRepository propRepo;
     private final UserServiceClient userServiceClient;
 
-    public Property addPropertyByUserId(int userId, PropertyDto dto) {
+    public String addPropertyByUserId(long userId, PropertyDto dto) {
         LandlordResponse landlord = userServiceClient.getLandlordByUserId(userId);
+        if(propRepo.existsPropertyByName(dto.getName())) {
+        	return "Property Already exists";
+        }
         
         Property prop = new Property();
         prop.setLandlordId(landlord.getLandlordId());
@@ -32,21 +36,22 @@ public class PropertyService {
         prop.setDescription(dto.getDescription());
         prop.setImage(dto.getImage());
 
-        return propRepo.save(prop);
+        propRepo.save(prop);
+        return "Successfully added";
     }
 
     public List<Property> getAvailableProperties() {
         return propRepo.findByAvailabilityStatus("Available");
     }
 
-    public List<Property> getOwnerPropertiesByUserId(int userId) {
+    public List<Property> getOwnerPropertiesByUserId(long userId) {
         LandlordResponse landlord = userServiceClient.getLandlordByUserId(userId);
-        System.out.println("ownerID: "+landlord.getLandlordId());
+        System.out.println("landLordID: "+landlord.getLandlordId());
         System.out.println(propRepo.findPropertiesByLandlordId(landlord.getLandlordId()));
         return propRepo.findPropertiesByLandlordId(landlord.getLandlordId());
     }
 
-    public Property updateProperty(int propertyId, PropertyDto dto) {
+    public Property updateProperty(long propertyId, PropertyDto dto) {
         Property existing = propRepo.findById(propertyId)
                 .orElseThrow(() -> new RuntimeException("Property not found"));
 
@@ -61,7 +66,10 @@ public class PropertyService {
         return propRepo.save(existing);
     }
 
-    public void deleteProperty(int propertyId) {
+    public void deleteProperty(long propertyId) {
+        if (!propRepo.existsById(propertyId)) {
+            throw new NoSuchElementException("Property not available");
+        }
         propRepo.deleteById(propertyId);
     }
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TenantProfileRequest {
-	private Long userId;
+	private long userId;
 	private String email;
     private String name;
     private long mobileNo;

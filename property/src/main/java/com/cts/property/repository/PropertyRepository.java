@@ -9,10 +9,11 @@ import com.cts.property.DTO.LandlordResponse;
 import com.cts.property.model.Property;
 
 @Repository
-public interface PropertyRepository extends JpaRepository<Property, Integer>{
+public interface PropertyRepository extends JpaRepository<Property, Long>{
 	
-	 List<Property> findPropertiesByLandlordId(int landlordId);
+	 List<Property> findPropertiesByLandlordId(long landlordId);
 	 
 	 List<Property> findByAvailabilityStatus(String status);
 	
+	 boolean existsPropertyByName(String name);
 }

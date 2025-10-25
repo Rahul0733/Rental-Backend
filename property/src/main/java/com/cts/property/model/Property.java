@@ -1,5 +1,7 @@
 package com.cts.property.model;
 
+import jakarta.persistence.Column;
+
 //import com.cts.property.DTO.Landlord;
 
 import jakarta.persistence.Entity;
@@ -20,9 +22,10 @@ import lombok.NoArgsConstructor;
 public class Property {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int propId;
+	@Column(name = "prop_id")
+	private long propertyId;
 	
-	private int landlordId;
+	private long landlordId;
 	
 	private String name;
 	

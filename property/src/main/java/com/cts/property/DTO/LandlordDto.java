@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LandlordDto {
-	private int ownerId;
+	private long landlordId;
 	private String name;
 	private String email;
 	private long mobile;

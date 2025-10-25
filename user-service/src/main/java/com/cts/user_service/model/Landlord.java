@@ -13,11 +13,11 @@ public class Landlord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long landlordId;
+    private long landlordId;
     
     private String email;
 
-    private Long userId; 
+    private long userId; 
 
     private String name;
 

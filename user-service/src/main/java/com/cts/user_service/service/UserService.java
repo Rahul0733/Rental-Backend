@@ -1,5 +1,8 @@
 package com.cts.user_service.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,21 +25,22 @@ public class UserService {
     @Autowired
     private LandlordRepository landlordRepository;
 
-    public TenantResponse getTenantProfile(Long userId) {
+    public TenantResponse getTenantProfile(long userId) {
         Tenant tenant = tenantRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("Tenant not found with userId: " + userId));
         
         TenantResponse response = new TenantResponse();
         response.setTenantId(tenant.getTenantId());
-        response.setFullName(tenant.getName());
-        response.setEmail(tenant.getEmail());
+        response.setTenantName(tenant.getName());
+        response.setTenantEmail(tenant.getEmail());
         response.setMobileNo(tenant.getMobileNo());
+
         
         
         return response;
     }
 
-    public LandlordResponse getLandlordProfile(Long userId) {
+    public LandlordResponse getLandlordProfile(long userId) {
         Landlord landlord = landlordRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("Landlord not found with userId: " + userId));
         
@@ -74,9 +78,13 @@ public class UserService {
     }
     
 
-	public Landlord getLandlordByUserId(Long userId) {
+	public Landlord getLandlordByUserId(long userId) {
 	    return landlordRepository.findByUserId(userId)
 	        .orElseThrow(() -> new UserNotFoundException("Landlord not found for userId: " + userId));
+	}
+	
+	public Tenant getTenantDetailByTenantId(long tenantId){
+		return tenantRepository.findById(tenantId).orElse(null);
 	}
 
 }

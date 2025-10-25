@@ -1,8 +1,10 @@
 package com.cts.property.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,26 +22,30 @@ public class PropertyController {
    
     
     @PostMapping("/add/by-user/{userId}")
-    public ResponseEntity<Property> addProperty(@PathVariable int userId, @RequestBody PropertyDto dto) {
+    public ResponseEntity<String> addProperty(@PathVariable long userId, @RequestBody PropertyDto dto) {
         return ResponseEntity.ok(service.addPropertyByUserId(userId, dto));
     }
 
     @GetMapping("/landlord/by-user/{userId}")
-    public ResponseEntity<List<Property>> getOwnerProperties(@PathVariable int userId) {
+    public ResponseEntity<List<Property>> getOwnerProperties(@PathVariable long userId) {
     	System.out.println("Reached");
         return ResponseEntity.ok(service.getOwnerPropertiesByUserId(userId));
     }
 
     @PutMapping("/update/{propertyId}")
-    public ResponseEntity<Property> updateProperty(@PathVariable int propertyId, @RequestBody PropertyDto dto) {
+    public ResponseEntity<Property> updateProperty(@PathVariable long propertyId, @RequestBody PropertyDto dto) {
     	System.out.println("Reached");
         return ResponseEntity.ok(service.updateProperty(propertyId, dto));
     }
 
     @DeleteMapping("/delete/{propertyId}")
-    public ResponseEntity<Void> deleteProperty(@PathVariable int propertyId) {
-        service.deleteProperty(propertyId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteProperty(@PathVariable long propertyId) {
+        try {
+            service.deleteProperty(propertyId);
+            return ResponseEntity.ok("Property deleted successfully.");
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Property not available.");
+        }
     }
 
     @GetMapping("/available")

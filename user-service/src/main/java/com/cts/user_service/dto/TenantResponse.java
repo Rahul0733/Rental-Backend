@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TenantResponse {
-    private Long tenantId;
-    private String fullName;
-    private String email;
+    private long tenantId;
+    private String tenantName;
+    private String tenantEmail;
     private long mobileNo;
 }

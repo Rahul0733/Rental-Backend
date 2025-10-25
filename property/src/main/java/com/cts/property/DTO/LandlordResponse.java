@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LandlordResponse {
-	private int landlordId;
+	private long landlordId;
 	private String name;
 	private String email;
 	private long mobile;

@@ -13,9 +13,9 @@ public class Tenant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tenantId;
+    private long tenantId;
 
-    private Long userId; 
+    private long userId; 
     
     private String email;
 
