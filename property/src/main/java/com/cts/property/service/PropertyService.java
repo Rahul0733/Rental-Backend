@@ -20,10 +20,10 @@ public class PropertyService {
     private final PropertyRepository propRepo;
     private final UserServiceClient userServiceClient;
 
-    public String addPropertyByUserId(long userId, PropertyDto dto) {
+    public Property addPropertyByUserId(long userId, PropertyDto dto) {
         LandlordResponse landlord = userServiceClient.getLandlordByUserId(userId);
         if(propRepo.existsPropertyByName(dto.getName())) {
-        	return "Property Already exists";
+        	return null;
         }
         
         Property prop = new Property();
@@ -36,13 +36,14 @@ public class PropertyService {
         prop.setDescription(dto.getDescription());
         prop.setImage(dto.getImage());
 
-        propRepo.save(prop);
-        return "Successfully added";
+        return propRepo.save(prop);
+        
     }
 
     public List<Property> getAvailableProperties() {
-        return propRepo.findByAvailabilityStatus("Available");
+        return propRepo.findByAvailabilityStatusIn(List.of("Available", "Rejected"));
     }
+
 
     public List<Property> getOwnerPropertiesByUserId(long userId) {
         LandlordResponse landlord = userServiceClient.getLandlordByUserId(userId);
@@ -72,4 +73,16 @@ public class PropertyService {
         }
         propRepo.deleteById(propertyId);
     }
+    
+    public void updatePropertyStatus(Long propertyId, String status) {
+        Property property = propRepo.findById(propertyId)
+            .orElseThrow(() -> new NoSuchElementException("Property not found with ID: " + propertyId));
+        if (status.equalsIgnoreCase("ACTIVE")) {
+            property.setAvailabilityStatus("Leased");
+        } else if (status.equalsIgnoreCase("REJECT") || status.equalsIgnoreCase("TERMINATED")) {
+            property.setAvailabilityStatus("Available");
+        }
+        propRepo.save(property);
+    }
+
 }

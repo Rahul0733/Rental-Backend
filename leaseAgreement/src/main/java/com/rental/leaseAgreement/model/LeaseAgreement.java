@@ -28,7 +28,8 @@ public class LeaseAgreement {
 
     private Date endDate;
 
-
+    private long landlordId;
+    
     private String terms;
 
     private long rentAmount;
@@ -36,4 +37,6 @@ public class LeaseAgreement {
     private String status;
 
     private String signatureFileName;
+
+	
 }

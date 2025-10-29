@@ -4,6 +4,7 @@ import com.rental.tenant.DTO.ApplicationRequest;
 import com.rental.tenant.DTO.ApplicationResponse;
 import com.rental.tenant.DTO.PropertyDTO;
 import com.rental.tenant.DTO.TenantResponse;
+import com.rental.tenant.feign.PropertyClient;
 import com.rental.tenant.feign.UserServiceClient;
 import com.rental.tenant.model.Application;
 import com.rental.tenant.repo.ApplicationRepository;
@@ -26,40 +27,48 @@ public class ApplicationService {
     @Autowired
     private UserServiceClient userServiceClient;
     
+    @Autowired 
+    private PropertyClient propertyClient;
+    
     @Autowired
     private TenantPropertyService tenantPropertyService;
-
+    
+    public List<PropertyDTO> fetchAvailableProperties() {
+        return propertyClient.getAvailableProperties();
+    }
     
     public List<Application> getApplicationsByUserId(long userId) {
-        try {
-            TenantResponse tenant = userServiceClient.getTenantDetail(userId);
-
+           TenantResponse tenant = userServiceClient.getTenantDetail(userId);
             if (tenant.getTenantId() == 0) {
                 throw new IllegalArgumentException("Invalid tenantId for userId: " + userId);
             }
 
             return applicationRepository.findByTenantId(tenant.getTenantId());
-
-        } catch (FeignException.NotFound e) {
-            throw new IllegalArgumentException("Tenant not found for userId: " + userId);
-        }
     }
 
     public Application processApplicationSubmission(long userId, ApplicationRequest request) {
-        if(userId == 0) {
-            throw new IllegalArgumentException("Invalid userId");	
+        if (userId == 0) {
+            throw new IllegalArgumentException("Invalid userId");
         }
-        System.out.println("reached------------------"+userId);
+
         TenantResponse tenant = userServiceClient.getTenantDetail(userId);
         if (tenant.getTenantId() == 0) {
             throw new IllegalArgumentException("Invalid tenantId for userId: " + userId);
         }
-        
-        boolean alreadyApplied = applicationRepository.existsByTenantIdAndPropertyId(tenant.getTenantId(), request.getPropertyId());
+
+        boolean alreadyApplied = applicationRepository.existsByTenantIdAndPropertyId(
+            tenant.getTenantId(), request.getPropertyId());
         if (alreadyApplied) {
             throw new IllegalArgumentException("Application already submitted for this property.");
         }
-        System.out.println(tenant);
+
+        List<PropertyDTO> availableProperties = fetchAvailableProperties();
+        String propertyName = availableProperties.stream()
+            .filter(p -> p.getPropertyId() == request.getPropertyId())
+            .map(PropertyDTO::getName)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Property not found in available list"));
+
         Application application = new Application();
         application.setTenantId(tenant.getTenantId());
         application.setTenantName(tenant.getTenantName());
@@ -67,13 +76,13 @@ public class ApplicationService {
         application.setMobileNo(tenant.getMobileNo());
         application.setPropertyId(request.getPropertyId());
         application.setLandlordId(request.getLandlordId());
+        application.setPropertyName(propertyName);
         application.setStatus("Pending");
         application.setSubmittedDate(new java.sql.Date(System.currentTimeMillis()));
-//        application.setLandlordId(tenantPropertyService.getLandlordIdById(request.getPropertyId()));
-        application.setPropertyName(tenantPropertyService.getPropertyNameById(request.getPropertyId()));
 
         return applicationRepository.save(application);
     }
+
 
     public List<Application> getAllApplications(){
     	List<Application> applications = applicationRepository.findAll();

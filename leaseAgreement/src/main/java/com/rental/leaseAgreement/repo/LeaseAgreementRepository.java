@@ -23,5 +23,16 @@ public interface LeaseAgreementRepository extends JpaRepository<LeaseAgreement, 
 
 	 LeaseAgreement findByLeaseId(long leaseId);
 
+	 List<LeaseAgreement> findByTenantIdAndStatus(Long tenantId, String string);
+
+
+	 List<LeaseAgreement> findByPropertyIdAndStatus(Long propertyId, String string);
+
+	 List<LeaseAgreement> findByLandlordId(long landlordId);
+
+
+
+
+
 
 }

@@ -25,13 +25,5 @@ public class TenantPropertyService {
             .orElseThrow(() -> new RuntimeException("Property not found"));
     }
 
-//	public long getLandlordIdById(long propertyId) {
-//		
-//		 return fetchAvailableProperties().stream()
-//		            .filter(p -> p.getPropertyId() == propertyId)
-//		            .map(PropertyDTO::getLandlordId)
-//		            .findFirst()
-//		            .orElseThrow(() -> new RuntimeException("Landord not found"));
-//	}
 
 }
