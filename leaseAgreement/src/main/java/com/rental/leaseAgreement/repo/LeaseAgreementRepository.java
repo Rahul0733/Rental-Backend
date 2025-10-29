@@ -13,14 +13,13 @@ public interface LeaseAgreementRepository extends JpaRepository<LeaseAgreement, 
 
 
 
-	//List<LeaseAgreement> findByApplicationId(Long applicationId);
+	 List<LeaseAgreement> findByTenantId(Long tenantId);
 
 
 	 boolean existsByApplicationId(long applicationId);
 
 	 LeaseAgreement findByApplicationId(long applicationId);
 
-	 List<LeaseAgreement> findByTenantId(long tenantId);
 
 	 LeaseAgreement findByLeaseId(long leaseId);
 

@@ -2,13 +2,11 @@ package com.rental.tenant.controller;
 
 import com.rental.tenant.DTO.ApplicationRequest;
 import com.rental.tenant.DTO.PropertyDTO;
-import com.rental.tenant.feign.UserServiceClient;
 import com.rental.tenant.model.Application;
 import com.rental.tenant.service.ApplicationService;
 import com.rental.tenant.service.TenantPropertyService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +27,7 @@ public class ApplicationController {
     @Autowired
     private TenantPropertyService tenantPropertyService;
     
-    @GetMapping("/properties/available")
+    @GetMapping("/landlord/property/available")
     public List<PropertyDTO> getAvailableProperties() {
         return tenantPropertyService.fetchAvailableProperties();
     }
@@ -72,4 +70,20 @@ public class ApplicationController {
     	System.out.println(applicationService.getAllApplications());
     	return applicationService.getAllApplications();
     }
+    
+    
+//    @PostMapping
+//    Application upData(@RequestBody Application app) {
+//    	return applicationService.getData(app);
+//    }
+    
+//    @GetMapping
+//    List<Application> appData(){
+//    	return applicationService.getappData();
+//    	
+//    }
+    
+    
+    
+   
 }

@@ -13,7 +13,7 @@ import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -90,4 +90,18 @@ public class ApplicationService {
         System.out.println("Updated application: " + application);
         return applicationRepository.save(application);
     }
+
+//    List<Application>list=new ArrayList<>();
+//	public List<Application> getappData() {
+//		list=applicationRepository.findAll();
+//		return list;
+//	}
+
+//	public Application getData(Application app) {
+//		return applicationRepository.save(app);
+//	}
+    
+    
+    
+    
 }

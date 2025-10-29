@@ -3,6 +3,7 @@ package com.rental.leaseAgreement.controller;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.rental.leaseAgreement.DTO.RentInfo;
 import com.rental.leaseAgreement.DTO.TenantRequest;
 import com.rental.leaseAgreement.feign.UserServiceClient;
 import com.rental.leaseAgreement.model.LeaseAgreement;
+import com.rental.leaseAgreement.repo.LeaseAgreementRepository;
 import com.rental.leaseAgreement.service.LeaseService;
 
 
@@ -35,9 +38,13 @@ public class LeaseAgreementController {
 	@Autowired
 	private UserServiceClient userServiceClient;
 	
+	@Autowired
+	private LeaseAgreementRepository leaseAgreementRepository;
+
+	
 	@PostMapping("/send")
 	public LeaseAgreement sendLease(@RequestBody LeaseAgreement lease) {
-		System.out.println(lease.getApplicationId());
+		System.out.println("----------------------------------"+lease.getApplicationId());
 		return leaseService.sendLease(lease);
 	}
 	
@@ -76,5 +83,33 @@ public class LeaseAgreementController {
 	public LeaseAgreement terminateLease(@PathVariable long leaseId) {
 	    return leaseService.terminateLease(leaseId);
 	}
+	
+	
+	
+//	@GetMapping("/rent-info/{tenantId}")
+//	public ResponseEntity<RentInfo> getRentInfoByTenantId(@PathVariable long tenantId) {
+//	    LeaseAgreement lease = leaseAgreementRepository.findByTenantId(tenantId);
+//	    if (lease != null) {
+//	        RentInfo rentInfo = new RentInfo(lease.getTenantId(), lease.getRentAmount());
+//	        return ResponseEntity.ok(rentInfo);
+//	    } else {
+//	        return ResponseEntity.notFound().build();
+//	    }
+//	}
+	
+	@GetMapping("/rent-info/{tenantId}")
+	public ResponseEntity<List<RentInfo>> getRentInfoByTenantId(@PathVariable long tenantId) {
+	    List<LeaseAgreement> leases = leaseAgreementRepository.findByTenantId(tenantId);
+	    if (!leases.isEmpty()) {
+	        List<RentInfo> rentInfos = leases.stream()
+	            .map(lease -> new RentInfo(lease.getTenantId(), lease.getRentAmount()))
+	            .collect(Collectors.toList());
+	        return ResponseEntity.ok(rentInfos);
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
+
 
 }
