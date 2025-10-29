@@ -39,7 +39,7 @@ public class ApplicationReviewService {
 	            filtered.add(app);
 	        }
 	    }
-
+	    System.out.println(filtered);
 	    return filtered;
 	}
 

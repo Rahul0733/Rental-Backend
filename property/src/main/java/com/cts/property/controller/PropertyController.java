@@ -22,7 +22,7 @@ public class PropertyController {
    
     
     @PostMapping("/add/by-user/{userId}")
-    public ResponseEntity<String> addProperty(@PathVariable long userId, @RequestBody PropertyDto dto) {
+    public ResponseEntity<Property> addProperty(@PathVariable long userId, @RequestBody PropertyDto dto) {
         return ResponseEntity.ok(service.addPropertyByUserId(userId, dto));
     }
 
@@ -52,4 +52,13 @@ public class PropertyController {
     public ResponseEntity<List<Property>> getAvailableProperties() {
         return ResponseEntity.ok(service.getAvailableProperties());
     }
+    
+    @PutMapping("/update-status/{propertyId}")
+    public ResponseEntity<String> updatePropertyStatus(@PathVariable Long propertyId,
+                                                       @RequestParam String status) {
+        service.updatePropertyStatus(propertyId, status);
+        return ResponseEntity.ok("Property status updated to: " + status);
+    }
+
+
 }

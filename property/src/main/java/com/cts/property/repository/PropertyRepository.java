@@ -13,7 +13,9 @@ public interface PropertyRepository extends JpaRepository<Property, Long>{
 	
 	 List<Property> findPropertiesByLandlordId(long landlordId);
 	 
-	 List<Property> findByAvailabilityStatus(String status);
+//	 List<Property> findByAvailabilityStatus(String status);
 	
 	 boolean existsPropertyByName(String name);
+
+	 List<Property> findByAvailabilityStatusIn(List<String> of);
 }

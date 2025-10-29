@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.rental.leaseAgreement.DTO.LandLordRequest;
 import com.rental.leaseAgreement.DTO.TenantRequest;
 import com.rental.leaseAgreement.feign.UserServiceClient;
 import com.rental.leaseAgreement.model.LeaseAgreement;
@@ -35,10 +36,10 @@ public class LeaseAgreementController {
 	@Autowired
 	private UserServiceClient userServiceClient;
 	
-	@PostMapping("/send")
-	public LeaseAgreement sendLease(@RequestBody LeaseAgreement lease) {
+	@PostMapping("/send/{userId}")
+	public LeaseAgreement sendLease(@PathVariable long userId, @RequestBody LeaseAgreement lease) {
 		System.out.println(lease.getApplicationId());
-		return leaseService.sendLease(lease);
+		return leaseService.sendLease(userId,lease);
 	}
 	
 
@@ -49,6 +50,7 @@ public class LeaseAgreementController {
 	    Long tenantId = response.getBody().getTenantId();
 	    return leaseService.getLeaseByTenantId(tenantId);
 	}
+
 	
 	@PostMapping("/accept/{leaseId}")
 	public LeaseAgreement accpetLease(@PathVariable long leaseId) {
@@ -59,9 +61,7 @@ public class LeaseAgreementController {
 	public LeaseAgreement rejectLease(@PathVariable long leaseId) {
 		return leaseService.rejectLease(leaseId);
 	}
-	
-	  
-	
+		
 	@PostMapping("/upload-signature/{leaseId}")
 	public LeaseAgreement uploadSignature(@PathVariable long leaseId, @RequestParam("file") MultipartFile file) throws IOException {
 		return leaseService.uploadSignature(leaseId,file); 
@@ -75,6 +75,14 @@ public class LeaseAgreementController {
 	@PutMapping("/{leaseId}/terminate")
 	public LeaseAgreement terminateLease(@PathVariable long leaseId) {
 	    return leaseService.terminateLease(leaseId);
+	}
+	
+	@GetMapping("/user/landlord/{userId}")
+	public List<LeaseAgreement> getLeaseForLandlord(@PathVariable long userId) {
+		ResponseEntity<LandLordRequest> response = userServiceClient.getLandlordDetail(userId);
+		System.out.println(response+"----------------------");
+	    long landlordId = response.getBody().getLandlordId();
+	    return leaseService.getLeaseForLandlord(landlordId);
 	}
 
 }

@@ -31,7 +31,8 @@ public class ApplicationController {
     
     @GetMapping("/properties/available")
     public List<PropertyDTO> getAvailableProperties() {
-        return tenantPropertyService.fetchAvailableProperties();
+       // return tenantPropertyService.fetchAvailableProperties();
+    	return applicationService.fetchAvailableProperties();
     }
 
     @PostMapping("/submit/{userId}")
@@ -43,29 +44,18 @@ public class ApplicationController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getApplicationsByUserId(@PathVariable long userId) {
-        try {
-            List<Application> applications = applicationService.getApplicationsByUserId(userId);
-            return ResponseEntity.ok(applications);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+    public List<Application> getApplicationsByUserId(@PathVariable long userId) {
+    	return applicationService.getApplicationsByUserId(userId);
     }
 
 
 
     @PutMapping("/{applicationId}/status")
-    public ResponseEntity<?> updateStatus(@PathVariable long applicationId,
+    public Application updateStatus(@PathVariable long applicationId,
                                           @RequestParam String status) {
-        try {
-            Application updatedApp = applicationService.updateApplicationStatus(applicationId, status);
-            return ResponseEntity.ok(updatedApp);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+        
+        	 return applicationService.updateApplicationStatus(applicationId, status);
     }
-
-
     
     @GetMapping("/user/landlord")
     public List<Application> getAllApplications(){
